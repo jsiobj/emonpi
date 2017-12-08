@@ -1,0 +1,19 @@
+#
+# OpenEnergyMonitor
+#
+
+[Unit]
+Description=Creates required directories and file in /var/log
+After=local-fs.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+
+ExecStart=/home/pi/emonpi/logtools/varlog-init.sh restore
+ExecStop=/home/pi/emonpi/logtools/varlog-init.sh backup
+
+RemainAfterExit=yes
+
+[Install]
+WantedBy=basic.target
