@@ -4,15 +4,17 @@
 # Initializing /var/log file structure on startup
 restore() {
     cp -Rpv --attributes-only /home/pi/emonpi/logtools/log.template/* /var/log
-    if [ -d "/home/pi/data/logtools/log.template" ]; then
+    if [ -d "/home/pi/data/logtools/log.template" -a ! -z "$(ls -A /home/pi/data/logtools/log.template)" ]; then
         /bin/cp -Rpv --attributes-only /home/pi/data/logtools/log.template/* /var/log
     fi
 }
 
 # Backuping current file structure on shutdown
 backup() {
-    mkdir  /home/pi/data/log.template
-    cp -Rpvn --attributes-only /var/log/* /home/pi/data/log.template
+    if [ ! -d /home/pi/data/logtools/log.template ]; then
+        mkdir -p /home/pi/data/logtools/log.template
+    fi
+    cp -Rpvn --attributes-only /var/log/* /home/pi/data/logtools/log.template
 }
 
 case $1 in

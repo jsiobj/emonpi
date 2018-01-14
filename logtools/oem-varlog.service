@@ -1,19 +1,22 @@
 #
 # OpenEnergyMonitor
 #
+# This service will backup log file directory structure
+# including files with proper permission so that they are 
+# restored on startup (by default /var/log is a tmpfs)
+# 
 
 [Unit]
-Description=Creates required directories and file in /var/log
+Description=Backups and restores directories and file in /var/log
 After=local-fs.target
-DefaultDependencies=no
+DefaultDependencies=no     # To start this service quite early in the boot process
+Conflicts=shutdown.target  # Because no default dep, to make systemd run ExecStop on shutdown
 
 [Service]
 Type=oneshot
-
+RemainAfterExit=yes
 ExecStart=/home/pi/emonpi/logtools/varlog-init.sh restore
 ExecStop=/home/pi/emonpi/logtools/varlog-init.sh backup
 
-RemainAfterExit=yes
-
 [Install]
-WantedBy=basic.target
+WantedBy=basic.target     # To start this service before any user service starts
