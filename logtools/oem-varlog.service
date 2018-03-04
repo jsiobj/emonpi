@@ -17,6 +17,7 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=/home/pi/emonpi/logtools/varlog-init.sh restore
 ExecStop=/home/pi/emonpi/logtools/varlog-init.sh backup
+ExecStop=/home/pi/emonpi/logtools/varlog-backup.sh 
 
 [Install]
 WantedBy=basic.target     # To start this service before any user service starts
