@@ -1,0 +1,49 @@
+#!/bin/sh
+
+LOGFILE=/var/log/oem-varlog.manage.log
+NOW=`date +%Y/%m/%d-%X`
+
+# Initializing /var/log file structure on startup
+restore() {
+    echo "======== $NOW - restore" | tee -a $LOGFILE
+    cp -Rpv --attributes-only /home/pi/emonpi/logtools/log.template/* /var/log 2>&1 | tee -a $LOGFILE
+    if [ -d "/home/pi/data/logtools/log.template" -a ! -z "$(ls -A /home/pi/data/logtools/log.template)" ]; then
+        /bin/cp -Rpv --attributes-only /home/pi/data/logtools/log.template/* /var/log 2>&1 | tee -a $LOGFILE
+    fi
+    echo "======== restore finished" | tee -a $LOGFILE
+}
+
+# Backuping current file structure on shutdown
+backup() {
+    echo "======== $NOW - backup" | tee -a $LOGFILE
+    if [ ! -d /home/pi/data/logtools/log.template ]; then
+
+        mkdir -p /home/pi/data/logtools/log.template
+    fi
+    cp -Rpvn --attributes-only /var/log/* /home/pi/data/logtools/log.template 2>&1 | tee -a $LOGFILE
+    echo "======== backup finished" | tee -a $LOGFILE
+}
+
+# Archiving log files for history / forensics
+archive() {
+    echo "======== $NOW - Log file backup" | tee -a $LOGFILE
+    rsync -av /var/log/* /home/pi/data/logtools/log.backup 2>&1 | tee -a $LOGFILE
+    echo "======== End" | tee -a $LOGFILE
+}
+
+
+
+case $1 in
+    backup|restore|archive)
+       $1
+       ;;
+
+    *)
+       echo "EmonPi RO filesystem log file management script"
+       echo "======== $NOW - Error : unknown option" | tee -a $LOGFILE
+       echo "usage $0 {backup|restore|archive}"
+       echo "      backup   : backup file structure (all directories and files with no content)"
+       echo "      restore  : restore file structure (only add empty file if not existing)"
+       echo "      archive  : archive all directories and file" 
+       exit 1
+esac

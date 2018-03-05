@@ -9,15 +9,19 @@
 [Unit]
 Description=Backups and restores directories and file in /var/log
 After=local-fs.target
-DefaultDependencies=no     # To start this service quite early in the boot process
-Conflicts=shutdown.target  # Because no default dep, to make systemd run ExecStop on shutdown
+
+# To start this service quite early in the boot process
+DefaultDependencies=no    
+
+# Because no default dep, to make systemd run ExecStop on shutdown
+Conflicts=shutdown.target  
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/home/pi/emonpi/logtools/varlog-init.sh restore
-ExecStop=/home/pi/emonpi/logtools/varlog-init.sh backup
-ExecStop=/home/pi/emonpi/logtools/varlog-backup.sh 
+ExecStart=/home/pi/emonpi/logtools/oem-varlog.manage restore
+ExecStop=/home/pi/emonpi/logtools/oem-varlog.manage backup
+ExecStop=/home/pi/emonpi/logtools/oem-varlog.manage archive
 
 [Install]
 WantedBy=basic.target     # To start this service before any user service starts
