@@ -1,7 +1,9 @@
 #!/bin/sh
 
-sudo cp /home/pi/emonpi/logtools/oem-varlog.service /etc/systemd/system
-sudo systemctl enable oem-varlog
+# Creating/enabling varlog service
+ln -s /home/pi/emonpi/logtools/oem-varlog.service /etc/systemd/system
+
+# Planned job to backup logfile every hours
 if [ ! -f /etc/cron.hourly/oem-varlog ]; then
     sudo ln -s /home/pi/emonpi/logtools/oem-varlog.cron /etc/cron.hourly/oem-varlog
 fi

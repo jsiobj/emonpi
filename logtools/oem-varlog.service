@@ -21,7 +21,6 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=/home/pi/emonpi/logtools/oem-varlog.manage restore
 ExecStop=/home/pi/emonpi/logtools/oem-varlog.manage backup
-ExecStop=/home/pi/emonpi/logtools/oem-varlog.manage archive
 
 [Install]
 WantedBy=basic.target     # To start this service before any user service starts
